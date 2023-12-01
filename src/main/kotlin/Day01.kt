@@ -48,25 +48,30 @@ class Day01 {
         return parse(openDocument(calibrationDocument), ::extractCalibrationValueByDigitsAndText)
     }
 
-    private val words = listOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
-
     private fun extractCalibrationValueByDigitsAndText(calibrationLine: String): Int {
         var result = Digits(null, null)
         val pointer = generateSequence(0) { it + 1 }
 
         pointer.take(calibrationLine.length).forEach { i ->
-            if (calibrationLine.elementAt(i).isDigit()) {
-                result = foundDigit(result, calibrationLine.elementAt(i))
+            result = if (calibrationLine.elementAt(i).isDigit()) {
+                foundDigit(result, calibrationLine.elementAt(i))
             } else {
-                words.forEach { w ->
-                    if (calibrationLine.substring(i).startsWith(w, true)) {
-                        result = foundWord(result, w)
-                    }
-                }
+                findWords(result, calibrationLine.substring(i))
             }
         }
 
         return "${result.first ?: 0}${result.last ?: 0}".toInt()
+    }
+
+    private val words = listOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+
+    private fun findWords(result: Digits, substring: String): Digits {
+        words.forEach { w ->
+            if (substring.startsWith(w, true)) {
+                return foundWord(result, w)
+            }
+        }
+        return result
     }
 
     private fun foundDigit(digits: Digits, digit: Char): Digits {
