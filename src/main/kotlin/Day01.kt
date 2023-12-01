@@ -51,10 +51,27 @@ class Day01 {
     private val words = listOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
 
     private fun extractCalibrationValueByDigitsAndText(calibrationLine: String): Int {
-        val first = "4"
-        var last = "2"
+        var first: Int? = null
+        var last: Int? = null
+        val pointer = generateSequence(0) { it + 1 }
 
-
+        pointer.take(calibrationLine.length).forEach { i ->
+            if (calibrationLine.elementAt(i).isDigit()) {
+                if (first == null) {
+                    first = calibrationLine.elementAt(i).digitToInt()
+                }
+                last = calibrationLine.elementAt(i).digitToInt()
+            } else {
+                words.forEach { w ->
+                    if (calibrationLine.substring(i).startsWith(w, true)) {
+                        if (first == null) {
+                            first = words.indexOf(w) + 1
+                        }
+                        last = words.indexOf(w) + 1
+                    }
+                }
+            }
+        }
 
         return "$first$last".toInt()
     }

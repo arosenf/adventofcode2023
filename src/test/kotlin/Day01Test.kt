@@ -25,8 +25,8 @@ class Day01Test {
     }
 
     @Test
-    fun `Parsing the document for part 2 should return idontknowyet`() {
+    fun `Parsing the document for part 2 should return 54418`() {
         val actual = day01.parseCalibrationDocumentDigitsAndText("calibration_document.txt")
-        Assertions.assertEquals(-1, actual)
+        Assertions.assertEquals(54418, actual)
     }
 }
