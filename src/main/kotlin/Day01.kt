@@ -51,34 +51,45 @@ class Day01 {
     private val words = listOf("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
 
     private fun extractCalibrationValueByDigitsAndText(calibrationLine: String): Int {
-        var first: Int? = null
-        var last: Int? = null
+        var result = Digits(null, null)
         val pointer = generateSequence(0) { it + 1 }
 
         pointer.take(calibrationLine.length).forEach { i ->
             if (calibrationLine.elementAt(i).isDigit()) {
-                if (first == null) {
-                    first = calibrationLine.elementAt(i).digitToInt()
-                }
-                last = calibrationLine.elementAt(i).digitToInt()
+                result = foundDigit(result, calibrationLine.elementAt(i))
             } else {
                 words.forEach { w ->
                     if (calibrationLine.substring(i).startsWith(w, true)) {
-                        if (first == null) {
-                            first = words.indexOf(w) + 1
-                        }
-                        last = words.indexOf(w) + 1
+                        result = foundWord(result, w)
                     }
                 }
             }
         }
 
-        return "$first$last".toInt()
+        return "${result.first ?: 0}${result.last ?: 0}".toInt()
+    }
+
+    private fun foundDigit(digits: Digits, digit: Char): Digits {
+        val value = digit.digitToInt()
+        return Digits(
+            digits.first ?: value,
+            value
+        )
+    }
+
+    private fun foundWord(digits: Digits, word: String): Digits {
+        val value = words.indexOf(word) + 1
+        return Digits(
+            digits.first ?: value,
+            value
+        )
     }
 
     /*
      * Stuff
      */
+    data class Digits(val first: Int?, val last: Int?)
+
     private fun openDocument(calibrationDocument: String): Stream<String> {
         val resource = {}::class.java.getResourceAsStream(calibrationDocument)?.bufferedReader()
         if (resource == null) {
