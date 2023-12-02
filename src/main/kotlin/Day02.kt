@@ -1,4 +1,6 @@
 import java.util.stream.Stream
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
@@ -12,33 +14,44 @@ fun main(args: Array<String>) {
 
     val result =
         if (args[1] == "part1") {
-            Day02().parseGames(lines)
+            Day02().parseGames(lines, 1)
         } else {
-            -1
-//            Day02().parseCalibrationDocumentDigitsAndText(fileName)
+            Day02().parseGames(lines, 2)
         }
 
     println("Result: $result")
 }
 
 class Day02 {
-    /*
-     * Part 1
-     */
-    fun parseGames(games: Stream<String>): Int {
+    fun parseGames(games: Stream<String>, part: Int): Int {
         return games
-            .map { gameValue(it) }
+            .map { if (part == 1) gameValue1(it) else gameValue2(it) }
             .reduce { x, y -> x + y }
             .orElse(0)
     }
 
-    private fun gameValue(game: String): Int {
+    private fun gameValue1(game: String): Int {
         return if (game.substringAfter(':')
                 .splitToSequence(';')
                 .map { toRound(it) }
                 .filter { !isValidRound(it) }
                 .count() > 0
         ) 0 else toGameId(game)
+    }
+
+    private fun gameValue2(game: String): Int {
+        val minRound = game.substringAfter(':')
+            .splitToSequence(';')
+            .map { toRound(it) }
+            .reduce { r1, r2 ->
+                Round(
+                    max(r1.red, r2.red),
+                    max(r1.green, r2.green),
+                    max(r1.blue, r2.blue)
+                )
+            }
+
+        return minRound.red * minRound.green * minRound.blue
     }
 
     private fun toGameId(game: String): Int {
