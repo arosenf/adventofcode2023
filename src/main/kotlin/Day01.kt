@@ -3,7 +3,7 @@ import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
     if (args.isEmpty() or (args.size < 2)) {
-        usage("?")
+        println("Calibration document not specified")
         exitProcess(1)
     }
     val calibrationDocument = args.first()
@@ -19,16 +19,12 @@ fun main(args: Array<String>) {
     println("Calibration value: $calibrationValue")
 }
 
-fun usage(doc: String) {
-    println("Calibration document $doc not found")
-}
-
 class Day01 {
     /*
      * Part 1
      */
     fun parseCalibrationDocumentDigits(calibrationDocument: String): Int {
-        return parse(openDocument(calibrationDocument), ::extractCalibrationValueByDigits)
+        return parse(readLines(calibrationDocument), ::extractCalibrationValueByDigits)
     }
 
     private fun extractCalibrationValueByDigits(calibrationLine: String): Int {
@@ -45,7 +41,7 @@ class Day01 {
      * Part 2
      */
     fun parseCalibrationDocumentDigitsAndText(calibrationDocument: String): Int {
-        return parse(openDocument(calibrationDocument), ::extractCalibrationValueByDigitsAndText)
+        return parse(readLines(calibrationDocument), ::extractCalibrationValueByDigitsAndText)
     }
 
     private fun extractCalibrationValueByDigitsAndText(calibrationLine: String): Int {
@@ -94,15 +90,6 @@ class Day01 {
      * Stuff
      */
     data class Digits(val first: Int?, val last: Int?)
-
-    private fun openDocument(calibrationDocument: String): Stream<String> {
-        val resource = {}::class.java.getResourceAsStream(calibrationDocument)?.bufferedReader()
-        if (resource == null) {
-            usage(calibrationDocument)
-            exitProcess(1)
-        }
-        return resource.lines()
-    }
 
     private fun parse(lines: Stream<String>, extractor: (String) -> Int): Int {
         return lines
