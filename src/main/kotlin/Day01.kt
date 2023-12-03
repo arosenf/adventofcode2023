@@ -91,10 +91,10 @@ class Day01 {
      */
     data class Digits(val first: Int?, val last: Int?)
 
-    private fun parse(lines: Stream<String>, extractor: (String) -> Int): Int {
+    private fun parse(lines: Sequence<String>, extractor: (String) -> Int): Int {
         return lines
             .map(extractor)
             .reduce { x, y -> x + y }
-            .orElse(0)
+            .or(0)
     }
 }

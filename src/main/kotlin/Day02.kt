@@ -23,11 +23,11 @@ fun main(args: Array<String>) {
 }
 
 class Day02 {
-    fun parseGames(games: Stream<String>, part: Int): Int {
+    fun parseGames(games: Sequence<String>, part: Int): Int {
         return games
             .map { if (part == 1) gameValue1(it) else gameValue2(it) }
             .reduce { x, y -> x + y }
-            .orElse(0)
+            .or(0)
     }
 
     private fun gameValue1(game: String): Int {
