@@ -11,24 +11,23 @@ fun main(args: Array<String>) {
 
     val result =
         if (args[1] == "part1") {
-            Day03().readSchematic(lines)
+            Day03().readSchematic1(lines)
         } else {
-//            Day03().readSchematic(lines, 2)
-            -1
+            Day03().readSchematic2(lines)
         }
 
     println("Result: $result")
 }
 
 class Day03 {
-    fun readSchematic(lines: Sequence<String>): Int {
+    fun readSchematic1(lines: Sequence<String>): Int {
         val validNumbers = mutableListOf<Int>()
 
         val schematic = lines
             .map(String::toList)
             .toList()
 
-        val validLocations = markValidLocations(schematic)
+        val validLocations = markValidPartNumberLocations(schematic)
 
         schematic.forEachIndexed { row, line ->
             var i = 0
@@ -48,11 +47,38 @@ class Day03 {
         return validNumbers.sum()
     }
 
-    private fun markValidLocations(schematic: List<List<Char>>): Set<Position> {
+    fun readSchematic2(lines: Sequence<String>): Int {
+        val validNumbers = mutableListOf<Int>()
+
+        val schematic = lines
+            .map(String::toList)
+            .toList()
+
+        val validLocations = markValidPartNumberLocations(schematic)
+
+        schematic.forEachIndexed { row, line ->
+            var i = 0
+            while (i < line.size) {
+                if (line[i].isDigit()) {
+                    val partNumber = findNumber(line, i, row)
+                    if (isAtValidLocation(partNumber, validLocations)) {
+                        validNumbers.add(partNumber.number)
+                    }
+                    i = partNumber.endIndex + 1
+                } else {
+                    i += 1
+                }
+            }
+        }
+
+        return validNumbers.sum()
+    }
+
+    private fun markValidPartNumberLocations(schematic: List<List<Char>>): Set<Position> {
         val validLocations = mutableSetOf<Position>()
         for ((rowIndex, row) in schematic.withIndex()) {
             for ((colIndex, element) in row.withIndex()) {
-                if (isValidLocationDesignator(element)) {
+                if (isValidPartNumberLocationDesignator(element)) {
                     validLocations.add(Position(rowIndex - 1, colIndex - 1))
                     validLocations.add(Position(rowIndex - 1, colIndex))
                     validLocations.add(Position(rowIndex - 1, colIndex + 1))
@@ -67,7 +93,7 @@ class Day03 {
         return validLocations.toSet()
     }
 
-    private fun isValidLocationDesignator(char: Char): Boolean {
+    private fun isValidPartNumberLocationDesignator(char: Char): Boolean {
         return !char.isDigit() && char != '.'
     }
 
