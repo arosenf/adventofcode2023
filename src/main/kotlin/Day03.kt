@@ -9,25 +9,24 @@ fun main(args: Array<String>) {
     println("Reading $fileName")
     val lines = readLines(fileName)
 
+    val schematic = lines
+        .map(String::toList)
+        .toList()
+
     val result =
         if (args[1] == "part1") {
-            Day03().readSchematic1(lines)
+            Day03().readSchematic1(schematic)
         } else {
-            Day03().readSchematic2(lines)
+            Day03().readSchematic2(schematic)
         }
 
     println("Result: $result")
 }
 
 class Day03 {
-    fun readSchematic1(lines: Sequence<String>): Int {
+    fun readSchematic1(schematic: List<List<Char>>): Int {
         val validNumbers = mutableListOf<Int>()
-
-        val schematic = lines
-            .map(String::toList)
-            .toList()
-
-        val validLocations = markValidPartNumberLocations(schematic)
+        val validLocations = markValidPartNumberLocations(schematic, ::isValidPartNumberLocationDesignator)
 
         schematic.forEachIndexed { row, line ->
             var i = 0
@@ -47,14 +46,9 @@ class Day03 {
         return validNumbers.sum()
     }
 
-    fun readSchematic2(lines: Sequence<String>): Int {
-        val validNumbers = mutableListOf<Int>()
-
-        val schematic = lines
-            .map(String::toList)
-            .toList()
-
-        val validLocations = markValidPartNumberLocations(schematic)
+    fun readSchematic2(schematic: List<List<Char>>): Int {
+        val validGears = mutableListOf<Int>()
+        val validLocations = markValidPartNumberLocations(schematic, ::isValidGearLocationDesignator)
 
         schematic.forEachIndexed { row, line ->
             var i = 0
@@ -62,7 +56,7 @@ class Day03 {
                 if (line[i].isDigit()) {
                     val partNumber = findNumber(line, i, row)
                     if (isAtValidLocation(partNumber, validLocations)) {
-                        validNumbers.add(partNumber.number)
+                        validGears.add(partNumber.number)
                     }
                     i = partNumber.endIndex + 1
                 } else {
@@ -71,14 +65,14 @@ class Day03 {
             }
         }
 
-        return validNumbers.sum()
+        return validGears.sum()
     }
 
-    private fun markValidPartNumberLocations(schematic: List<List<Char>>): Set<Position> {
+    private fun markValidPartNumberLocations(schematic: List<List<Char>>, validLocationDesignator: (Char) -> Boolean): Set<Position> {
         val validLocations = mutableSetOf<Position>()
         for ((rowIndex, row) in schematic.withIndex()) {
             for ((colIndex, element) in row.withIndex()) {
-                if (isValidPartNumberLocationDesignator(element)) {
+                if (validLocationDesignator.invoke(element)) {
                     validLocations.add(Position(rowIndex - 1, colIndex - 1))
                     validLocations.add(Position(rowIndex - 1, colIndex))
                     validLocations.add(Position(rowIndex - 1, colIndex + 1))
@@ -95,6 +89,10 @@ class Day03 {
 
     private fun isValidPartNumberLocationDesignator(char: Char): Boolean {
         return !char.isDigit() && char != '.'
+    }
+
+    private fun isValidGearLocationDesignator(char: Char): Boolean {
+        return char == '*'
     }
 
     // Expand left and right from given position until no digits -> found a number
