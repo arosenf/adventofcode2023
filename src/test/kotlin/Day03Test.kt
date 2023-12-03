@@ -24,9 +24,8 @@ class Day03Test {
     }
 
     @Test
-    @Disabled
-    fun `Parsing the document for part 2 should return -1`() {
+    fun `Parsing the document for part 2 should return 80703636`() {
         val actual = day03.readSchematic2(readLines("day03/schematic.txt").map(String::toList).toList())
-        Assertions.assertEquals(-1, actual)
+        Assertions.assertEquals(80703636, actual)
     }
 }

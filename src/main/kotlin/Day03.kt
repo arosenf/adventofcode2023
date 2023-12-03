@@ -25,42 +25,38 @@ fun main(args: Array<String>) {
 
 class Day03 {
     fun readSchematic1(schematic: List<List<Char>>): Int {
-        val validNumbers = mutableListOf<Int>()
-        val validLocations = markValidPartNumberLocations(schematic, ::isValidPartNumberLocationDesignator)
-
-        schematic.forEachIndexed { row, line ->
-            var i = 0
-            while (i < line.size) {
-                if (line[i].isDigit()) {
-                    val partNumber = findNumber(line, i, row)
-                    if (isAtValidLocation(partNumber, validLocations)) {
-                        validNumbers.add(partNumber.number)
-                    }
-                    i = partNumber.endIndex + 1
-                } else {
-                    i += 1
-                }
-            }
-        }
-
-        return validNumbers.sum()
+        return findValidPartNumbers(
+            schematic,
+            ::isValidPartNumberLocationDesignator
+        ).sumOf { partNumber -> (partNumber.number) }
     }
 
     fun readSchematic2(schematic: List<List<Char>>): Int {
         val validGears = mutableListOf<Int>()
-        val validLocations = markValidPartNumberLocations(schematic, ::isValidGearLocationDesignator)
+        val validNumbers = findValidPartNumbers(schematic, ::isValidGearLocationDesignator)
 
-        schematic.forEachIndexed { row, line ->
-            var i = 0
-            while (i < line.size) {
-                if (line[i].isDigit()) {
-                    val partNumber = findNumber(line, i, row)
-                    if (isAtValidLocation(partNumber, validLocations)) {
-                        validGears.add(partNumber.number)
+        for ((rowIndex, row) in schematic.withIndex()) {
+            for ((colIndex, element) in row.withIndex()) {
+                if (isValidGearLocationDesignator(element)) {
+                    val validLocations = mutableSetOf(
+                        Position(rowIndex - 1, colIndex - 1),
+                        Position(rowIndex - 1, colIndex),
+                        Position(rowIndex - 1, colIndex + 1),
+                        Position(rowIndex, colIndex - 1),
+                        Position(rowIndex, colIndex + 1),
+                        Position(rowIndex + 1, colIndex - 1),
+                        Position(rowIndex + 1, colIndex),
+                        Position(rowIndex + 1, colIndex + 1)
+                    )
+
+                    val candidates = validNumbers.asSequence()
+                        .filter { isAtValidLocation(it, validLocations) }
+                        .toList()
+
+                    if (candidates.size == 2) {
+                        validGears.add(candidates.map { it.number }.reduce { x, y -> x * y })
+                        validNumbers.subtract(candidates)
                     }
-                    i = partNumber.endIndex + 1
-                } else {
-                    i += 1
                 }
             }
         }
@@ -68,7 +64,35 @@ class Day03 {
         return validGears.sum()
     }
 
-    private fun markValidPartNumberLocations(schematic: List<List<Char>>, validLocationDesignator: (Char) -> Boolean): Set<Position> {
+    private fun findValidPartNumbers(
+        schematic: List<List<Char>>,
+        validLocationDesignator: (Char) -> Boolean
+    ): List<PartNumber> {
+        val validNumbers = mutableListOf<PartNumber>()
+        val validLocations = markValidPartNumberLocations(schematic, validLocationDesignator)
+
+        schematic.forEachIndexed { row, line ->
+            var i = 0
+            while (i < line.size) {
+                if (line[i].isDigit()) {
+                    val partNumber = findNumber(line, i, row)
+                    if (isAtValidLocation(partNumber, validLocations)) {
+                        validNumbers.add(partNumber)
+                    }
+                    i = partNumber.endIndex + 1
+                } else {
+                    i += 1
+                }
+            }
+        }
+
+        return validNumbers
+    }
+
+    private fun markValidPartNumberLocations(
+        schematic: List<List<Char>>,
+        validLocationDesignator: (Char) -> Boolean
+    ): Set<Position> {
         val validLocations = mutableSetOf<Position>()
         for ((rowIndex, row) in schematic.withIndex()) {
             for ((colIndex, element) in row.withIndex()) {
