@@ -18,16 +18,14 @@ class Day04Test {
     }
 
     @Test
-    @Disabled
-    fun `Parsing the example document for part 2 should return -1`() {
-//        val actual = day04.countPoints2(readLines("day04/scratchcard_example.txt"))
-//        Assertions.assertEquals(-1, actual)
+    fun `Parsing the example document for part 2 should return 30`() {
+        val actual = day04.countPoints2(readLines("day04/scratchcard_example.txt"))
+        Assertions.assertEquals(30, actual)
     }
 
     @Test
-    @Disabled
-    fun `Parsing the document for part 2 should return -1`() {
-//        val actual = day04.countPoints2(readLines("day04/scratchcard.txt"))
-//        Assertions.assertEquals(-1, actual)
+    fun `Parsing the document for part 2 should return 7013204`() {
+        val actual = day04.countPoints2(readLines("day04/scratchcard.txt"))
+        Assertions.assertEquals(7013204, actual)
     }
 }

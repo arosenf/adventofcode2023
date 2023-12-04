@@ -32,10 +32,31 @@ class Day04 {
     }
 
     fun countPoints2(lines: Sequence<String>): Int {
-        return -1
+        var result = 0
+
+        val games = lines
+            .map(::parseGame)
+            .toList()
+
+        result += games.size
+
+        var copies = games
+            .flatMap { copies(it, games) }
+
+        while (copies.isNotEmpty()) {
+            result += copies.size
+            copies = copies.flatMap { copies(it, games) }
+        }
+
+        return result
     }
 
     private fun parseGame(line: String): Game {
+        val gameNumber = line
+            .substringBefore(':')
+            .partition { c -> c.isDigit() }
+            .first
+            .toInt()
         val winningNumbers = line.substringAfter(':')
             .trim()
             .substringBefore('|')
@@ -48,7 +69,7 @@ class Day04 {
             .splitToSequence(delimiter)
             .map(String::toInt)
             .toList()
-        return Game(winningNumbers, actualNumbers)
+        return Game(gameNumber, winningNumbers, actualNumbers)
     }
 
     private fun countHits(game: Game): Int {
@@ -63,5 +84,14 @@ class Day04 {
         }
     }
 
-    data class Game(val winningNumbers: List<Int>, val actualNumbers: List<Int>)
+    private fun copies(game: Game, games: List<Game>): List<Game> {
+        val hits = countHits(game)
+        return if (hits < 1) {
+            listOf()
+        } else {
+            games.subList(game.gameNumber, game.gameNumber + hits)
+        }
+    }
+
+    data class Game(val gameNumber: Int, val winningNumbers: List<Int>, val actualNumbers: List<Int>)
 }
