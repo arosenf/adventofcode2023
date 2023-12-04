@@ -6,26 +6,28 @@ class Day04Test {
     private val day04 = Day04()
 
     @Test
-    fun `Parsing the example document for part 1 should return 4361`() {
-//        val actual = day04.readSchematic1(readLines("day03/schematic_example.txt").map(String::toList).toList())
-//        Assertions.assertEquals(4361, actual)
+    fun `Parsing the example document for part 1 should return 13`() {
+        val actual = day04.countPoints(readLines("day04/scratchcard_example.txt"))
+        Assertions.assertEquals(13, actual)
     }
 
     @Test
-    fun `Parsing the document for part 1 should return 539590`() {
-//        val actual = day04.readSchematic1(readLines("day03/schematic.txt").map(String::toList).toList())
-//        Assertions.assertEquals(539590, actual)
+    fun `Parsing the document for part 1 should return 22488`() {
+        val actual = day04.countPoints(readLines("day04/scratchcard.txt"))
+        Assertions.assertEquals(22488, actual)
     }
 
     @Test
-    fun `Parsing the example document for part 2 should return 467835`() {
-//        val actual = day04.readSchematic2(readLines("day03/schematic_example.txt").map(String::toList).toList())
-//        Assertions.assertEquals(467835, actual)
+    @Disabled
+    fun `Parsing the example document for part 2 should return -1`() {
+//        val actual = day04.countPoints2(readLines("day04/scratchcard_example.txt"))
+//        Assertions.assertEquals(-1, actual)
     }
 
     @Test
-    fun `Parsing the document for part 2 should return 80703636`() {
-//        val actual = day04.readSchematic2(readLines("day03/schematic.txt").map(String::toList).toList())
-//        Assertions.assertEquals(80703636, actual)
+    @Disabled
+    fun `Parsing the document for part 2 should return -1`() {
+//        val actual = day04.countPoints2(readLines("day04/scratchcard.txt"))
+//        Assertions.assertEquals(-1, actual)
     }
 }
