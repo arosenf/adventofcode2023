@@ -31,6 +31,7 @@ In the above example, card 1 has five winning numbers (41, 48, 83, 86, and 17) a
 - Card 4 has one winning number (84), so it is worth 1 point.
 - Card 5 has no winning numbers, so it is worth no points.
 - Card 6 has no winning numbers, so it is worth no points.
+
 So, in this example, the Elf's pile of scratchcards is worth 13 points.
 
 Take a seat in the large pile of colorful cards. How many points are they worth in total?
@@ -39,7 +40,7 @@ Your puzzle answer was 22488.
 
 The first half of this puzzle is complete! It provides one gold star: *
 
---- Part Two ---
+## Part Two
 
 Just as you're about to report your findings to the Elf, one of you realizes that the rules have actually been printed on the back of every card this whole time.
 
