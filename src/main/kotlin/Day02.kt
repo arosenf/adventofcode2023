@@ -1,6 +1,4 @@
-import java.util.stream.Stream
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {

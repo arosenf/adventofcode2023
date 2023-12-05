@@ -1,4 +1,3 @@
-import java.util.stream.Stream
 import kotlin.system.exitProcess
 
 fun readLines(fileName: String): Sequence<String> {

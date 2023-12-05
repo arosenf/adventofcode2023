@@ -1,3 +1,4 @@
+import kotlin.math.min
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
@@ -11,29 +12,35 @@ fun main(args: Array<String>) {
 
     val result =
         if (args[1] == "part1") {
-            Day05().findLowestLocation(lines)
+            Day05().findLowestLocation1(lines)
         } else {
-            -1
-//            Day05().foo(lines)
+            Day05().findLowestLocation2(lines)
         }
 
     println("Result: $result")
 }
 
 class Day05 {
-    fun findLowestLocation(lines: Sequence<String>): Long {
-        val results = arrayListOf<Long>()
+    fun findLowestLocation1(lines: Sequence<String>): Long {
         val almanac = readAlmanac(lines)
+        return processAlmanac(almanac)
+    }
 
+    fun findLowestLocation2(lines: Sequence<String>): Long {
+        val almanac = expandSeeds(readAlmanac(lines))
+        return processAlmanac(almanac)
+    }
+
+    private fun processAlmanac(almanac: Almanac): Long {
+        var result = Long.MAX_VALUE
         almanac.seeds.forEach { seed ->
             var finalSeed = seed
             almanac.maps.forEach { map ->
                 finalSeed = propagateSeed(finalSeed, map.ranges)
             }
-            results.add(finalSeed)
+            result = min(result, finalSeed)
         }
-
-        return results.min()
+        return result
     }
 
     // We read everything and keep it in memory. No need to do stream processing, we got RAM! 💾
@@ -72,6 +79,19 @@ class Day05 {
             }
         }
         return seed
+    }
+
+    private fun expandSeeds(almanac: Almanac): Almanac {
+        return Almanac(
+            almanac.seeds
+                .chunked(2)
+                .map { it ->
+                    generateSequence(it.first()) { it + 1 }
+                        .take(it.last().toInt())
+                }
+                .flatten(),
+            almanac.maps
+        )
     }
 
     data class Almanac(val seeds: Sequence<Long>, val maps: Sequence<AlmanacMap>)
