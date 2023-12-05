@@ -12,10 +12,9 @@ class Day05Test {
     }
 
     @Test
-    @Disabled
-    fun `Parsing the document for part 1 should return -1`() {
+    fun `Parsing the document for part 1 should return 240320250`() {
         val actual = day05.findLowestLocation(readLines("day05/almanac.txt"))
-        Assertions.assertEquals(-1, actual)
+        Assertions.assertEquals(240320250, actual)
     }
 
     @Test
