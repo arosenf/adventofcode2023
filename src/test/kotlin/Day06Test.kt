@@ -7,23 +7,23 @@ class Day06Test {
 
     @Test
     fun `Parsing the example document for part 1 should return 288`() {
-        val lines = readLines("day06/races_example.txt")
-        val times = splitDay06(lines.toList()[0])
-        val distances = splitDay06(lines.toList()[1])
+        val lines = readLines("day06/races_example.txt").toList()
+        val times = splitDay06(lines[0])
+        val distances = splitDay06(lines[1])
 
         val actual = day06.findMarginOfError(times, distances)
         Assertions.assertEquals(288, actual)
     }
 
     @Test
-    fun `Parsing the document for part 1 should return -1`() {
-        val lines = readLines("day06/races.txt")
+    fun `Parsing the document for part 1 should return 252000`() {
+        val lines = readLines("day06/races.txt").toList()
 
-        val times = splitDay06(lines.toList()[0])
-        val distances = splitDay06(lines.toList()[1])
+        val times = splitDay06(lines[0])
+        val distances = splitDay06(lines[1])
 
         val actual = day06.findMarginOfError(times, distances)
-        Assertions.assertEquals(-1, actual)
+        Assertions.assertEquals(252000, actual)
     }
 /*
     @Test
