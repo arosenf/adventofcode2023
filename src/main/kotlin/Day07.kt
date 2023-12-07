@@ -7,11 +7,11 @@ fun main(args: Array<String>) {
     }
     val fileName = args.first()
     println("Reading $fileName")
-    val lines = readLines(fileName).toList()
+    val hands = readHands(readLines(fileName))
 
     val result =
         if (args[1] == "part1") {
-            -1
+            Day07().evaluateHands(hands)
         } else {
             -1
         }
@@ -19,5 +19,85 @@ fun main(args: Array<String>) {
     println("Result: $result")
 }
 
+fun readHands(lines: Sequence<String>): Hands {
+    val hands: List<List<Char>> = arrayListOf()
+    val bids: List<Int> = arrayListOf()
+
+    lines.forEach {
+        val line = it.split(' ')
+        hands.addLast(sortHand(line.first()))
+        bids.addLast(line.last().toInt())
+    }
+
+    return Hands(
+        hands
+            .map { Hand(it, HandType.HIGH_CARD) }
+            .map(::evaluateHandType)
+            .toList(),
+        bids
+    )
+}
+
+fun sortHand(hand: String): List<Char> {
+    return hand.toCharArray()
+        .sortedWith(compareBy { handValues[it] ?: 1 })
+        .reversed()
+}
+
+fun evaluateHandType(hand: Hand): Hand {
+    val groups = hand.hand.groupBy { handValues[it] ?: 1 }
+    val pairsCount = groups.filter { it.value.size == 2 }.size
+    val triplesCount = groups.filter { it.value.size == 3 }.size
+    val foursCount = groups.filter { it.value.size == 4 }.size
+    val fivesCount = groups.filter { it.value.size == 5 }.size
+
+    val handType = when {
+        fivesCount == 1 -> HandType.FIVE_OF_A_KIND
+        foursCount == 1 -> HandType.FOUR_OF_A_KIND
+        triplesCount == 1 && pairsCount == 1 -> HandType.FULL_HOUSE
+        triplesCount == 1 -> HandType.THREE_OF_A_KIND
+        pairsCount == 2 -> HandType.TWO_PAIR
+        pairsCount == 1 -> HandType.ONE_PAIR
+        else -> HandType.HIGH_CARD
+    }
+
+    return Hand(hand.hand, handType)
+}
+
 class Day07 {
+    fun evaluateHands(hands: Hands): Int {
+        println(hands.hands)
+        println(hands.bids)
+
+        return -1
+    }
+}
+
+data class Hands(val hands: List<Hand>, val bids: List<Int>)
+data class Hand(val hand: List<Char>, val type: HandType)
+
+val handValues = mapOf(
+    'A' to 14,
+    'K' to 13,
+    'Q' to 12,
+    'J' to 11,
+    'T' to 10,
+    '9' to 9,
+    '8' to 8,
+    '7' to 7,
+    '6' to 6,
+    '5' to 5,
+    '4' to 4,
+    '3' to 3,
+    '2' to 2
+)
+
+enum class HandType(val value: Int) {
+    FIVE_OF_A_KIND(7), // 5 unique
+    FOUR_OF_A_KIND(6), // 2 unique, 1 single
+    FULL_HOUSE(5), // 2 unique, 1 pair
+    THREE_OF_A_KIND(4), // 3 unique, 1 triple
+    TWO_PAIR(3), // 3 unique, 2 pair
+    ONE_PAIR(2), // 4 unique, 1 pair
+    HIGH_CARD(1) // everything else
 }
