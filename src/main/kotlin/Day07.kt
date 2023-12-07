@@ -66,16 +66,17 @@ fun evaluateHandType(hand: Hand): Hand {
 
 class Day07 {
     fun evaluateHands(hands: Hands): Int {
-        println(hands.hands)
-        println(hands.bids)
-
-        return -1
+        return hands.hands
+            .sortedWith(compareBy { it.type.value })
+            .mapIndexed { i, hand -> println("index $i hand ${hand.hand} bid ${hands.bids[hands.hands.indexOf(hand)]}"); (i + 1) * hands.bids[hands.hands.indexOf(hand)] }
+            .sum()
     }
 }
 
 data class Hands(val hands: List<Hand>, val bids: List<Int>)
 data class Hand(val hand: List<Char>, val type: HandType)
 
+// TODO cards might not need to be sorted to rank within same type
 val handValues = mapOf(
     'A' to 14,
     'K' to 13,
@@ -93,11 +94,11 @@ val handValues = mapOf(
 )
 
 enum class HandType(val value: Int) {
-    FIVE_OF_A_KIND(7), // 5 unique
-    FOUR_OF_A_KIND(6), // 2 unique, 1 single
-    FULL_HOUSE(5), // 2 unique, 1 pair
-    THREE_OF_A_KIND(4), // 3 unique, 1 triple
-    TWO_PAIR(3), // 3 unique, 2 pair
-    ONE_PAIR(2), // 4 unique, 1 pair
-    HIGH_CARD(1) // everything else
+    FIVE_OF_A_KIND(7),
+    FOUR_OF_A_KIND(6),
+    FULL_HOUSE(5),
+    THREE_OF_A_KIND(4),
+    TWO_PAIR(3),
+    ONE_PAIR(2),
+    HIGH_CARD(1)
 }
