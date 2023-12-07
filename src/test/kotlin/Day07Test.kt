@@ -14,20 +14,19 @@ class Day07Test {
     }
 
     @Test
-    @Disabled
-    fun `Parsing the document for part 1 should return -1`() {
+    fun `Parsing the document for part 1 should return 249483956`() {
         val hands = readHands(readLines("day07/hands.txt"))
 
         val actual = day07.evaluateHands(hands)
-        Assertions.assertEquals(-1, actual)
+        Assertions.assertEquals(249483956, actual)
     }
 /*
     @Test
-    fun `Parsing the example document for part 2 should return -1`() {
+    fun `Parsing the example document for part 2 should return 5905`() {
         val hands = readHands(readLines("day07/hands_example.txt"))
 
         val actual = day07.evaluateHands(hands)
-        Assertions.assertEquals(-1, actual)
+        Assertions.assertEquals(5905, actual)
     }
 
     @Test

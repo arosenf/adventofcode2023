@@ -25,7 +25,7 @@ fun readHands(lines: Sequence<String>): Hands {
 
     lines.forEach {
         val line = it.split(' ')
-        hands.addLast(sortHand(line.first()))
+        hands.addLast(line.first().toList())
         bids.addLast(line.last().toInt())
     }
 
@@ -38,14 +38,8 @@ fun readHands(lines: Sequence<String>): Hands {
     )
 }
 
-fun sortHand(hand: String): List<Char> {
-    return hand.toCharArray()
-        .sortedWith(compareBy { handValues[it] ?: 1 })
-        .reversed()
-}
-
 fun evaluateHandType(hand: Hand): Hand {
-    val groups = hand.hand.groupBy { handValues[it] ?: 1 }
+    val groups = hand.hand.groupBy { it }
     val pairsCount = groups.filter { it.value.size == 2 }.size
     val triplesCount = groups.filter { it.value.size == 3 }.size
     val foursCount = groups.filter { it.value.size == 4 }.size
@@ -67,8 +61,16 @@ fun evaluateHandType(hand: Hand): Hand {
 class Day07 {
     fun evaluateHands(hands: Hands): Int {
         return hands.hands
-            .sortedWith(compareBy { it.type.value })
-            .mapIndexed { i, hand -> println("index $i hand ${hand.hand} bid ${hands.bids[hands.hands.indexOf(hand)]}"); (i + 1) * hands.bids[hands.hands.indexOf(hand)] }
+            .sortedWith(compareBy(
+                { it.type.value },
+                // Ok, that's a bit cheap 🤷🏽‍♀️
+                { handValues[it.hand[0]] },
+                { handValues[it.hand[1]] },
+                { handValues[it.hand[2]] },
+                { handValues[it.hand[3]] },
+                { handValues[it.hand[4]] }
+            ))
+            .mapIndexed { i, hand -> (i + 1) * hands.bids[hands.hands.indexOf(hand)] }
             .sum()
     }
 }
@@ -76,7 +78,6 @@ class Day07 {
 data class Hands(val hands: List<Hand>, val bids: List<Int>)
 data class Hand(val hand: List<Char>, val type: HandType)
 
-// TODO cards might not need to be sorted to rank within same type
 val handValues = mapOf(
     'A' to 14,
     'K' to 13,
