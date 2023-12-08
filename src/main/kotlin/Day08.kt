@@ -21,18 +21,56 @@ fun main(args: Array<String>) {
 
 class Day08 {
     fun navigate(input: Sequence<String>): Int {
-        return -1
+        val inputList = input.toList()
+        val instruction = inputList.first().toCharArray().toList()
+        //.take() as many as you want, this is an infinitely looping sequence
+        val instructions = generateSequence { instruction }.flatten()
+
+        val network = mutableMapOf<String, Node>()
+        inputList.drop(2)
+            .forEach {
+                val node = parseNode(it)
+                network[node.first] = node.second
+            }
+
+        var result = 0
+        var currentNode = network["AAA"]
+
+        // That's actually very risky and could produce an infinite loop
+        run breaking@{
+            instructions.forEach {
+                result += 1
+                val newNode =
+                    when (it) {
+                        'L' -> currentNode!!.left
+                        'R' -> currentNode!!.right
+                        else -> "ZZZ"
+                    }
+
+                currentNode = network[newNode]
+                if (newNode == "ZZZ") {
+                    return@breaking
+                }
+            }
+        }
+
+        return result
     }
+
+    private fun parseNode(node: String): Pair<String, Node> {
+        val key = parseKey(node)
+        val rawNode = node.substringAfter('=')
+            .trim()
+            .substringAfter('(')
+            .substringBefore(')')
+            .split(',')
+            .map { s -> s.trim() }
+        return key to Node(rawNode.first(), rawNode.last())
+    }
+
+    private fun parseKey(node: String): String {
+        return node.substringBefore('=').trim()
+    }
+
+    data class Node(val left: String, val right: String)
 }
-
-/*
-RL
-
-AAA = (BBB, CCC)
-BBB = (DDD, EEE)
-CCC = (ZZZ, GGG)
-DDD = (DDD, DDD)
-EEE = (EEE, EEE)
-GGG = (GGG, GGG)
-ZZZ = (ZZZ, ZZZ)
-*/
