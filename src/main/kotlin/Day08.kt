@@ -61,7 +61,6 @@ class Day08 {
         run breaking@{
             instructions.forEach { ins ->
                 result += 1
-                var zCount = 0
                 val newNodes = currentNodes.map { n ->
                     val newNode =
                         when (ins) {
@@ -69,12 +68,12 @@ class Day08 {
                             'R' -> n.right
                             else -> "ZZZ"
                         }
-                    zCount += 1
                     network[newNode]!!
                 }
 
                 currentNodes = newNodes
-                if (zCount == currentNodes.size) {
+                val zNodeCount = currentNodes.count { it.name.endsWith('Z') }
+                if (zNodeCount >= currentNodes.size) {
                     return@breaking
                 }
             }
@@ -107,7 +106,7 @@ class Day08 {
             .substringBefore(')')
             .split(',')
             .map { s -> s.trim() }
-        return key to Node(rawNode.first(), rawNode.last())
+        return key to Node(key, rawNode.first(), rawNode.last())
     }
 
     private fun parseKey(node: String): String {
@@ -121,5 +120,5 @@ class Day08 {
             .toList()
     }
 
-    data class Node(val left: String, val right: String)
+    data class Node(val name: String, val left: String, val right: String)
 }

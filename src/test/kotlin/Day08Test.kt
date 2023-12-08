@@ -38,7 +38,6 @@ class Day08Test {
     }
 
     @Test
-    @Disabled
     fun `Parsing the document for part 2 should return -1`() {
         val network = readLines("day08/network.txt")
 
