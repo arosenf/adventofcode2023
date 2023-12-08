@@ -1,4 +1,5 @@
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class Day08Test {
@@ -26,5 +27,22 @@ class Day08Test {
 
         val actual = day08.navigate(network)
         Assertions.assertEquals(19631, actual)
+    }
+
+    @Test
+    fun `Parsing the example document for part 2 should return 6`() {
+        val network = readLines("day08/network_example3.txt")
+
+        val actual = day08.navigateGhost(network)
+        Assertions.assertEquals(6, actual)
+    }
+
+    @Test
+    @Disabled
+    fun `Parsing the document for part 2 should return -1`() {
+        val network = readLines("day08/network.txt")
+
+        val actual = day08.navigateGhost(network)
+        Assertions.assertEquals(-1, actual)
     }
 }

@@ -22,16 +22,8 @@ fun main(args: Array<String>) {
 class Day08 {
     fun navigate(input: Sequence<String>): Int {
         val inputList = input.toList()
-        val instruction = inputList.first().toCharArray().toList()
-        //.take() as many as you want, this is an infinitely looping sequence
-        val instructions = generateSequence { instruction }.flatten()
-
-        val network = mutableMapOf<String, Node>()
-        inputList.drop(2)
-            .forEach {
-                val node = parseNode(it)
-                network[node.first] = node.second
-            }
+        val instructions = parseInstructions(inputList.first())
+        val network = parseNetwork(inputList)
 
         var result = 0
         var currentNode = network["AAA"]
@@ -57,6 +49,56 @@ class Day08 {
         return result
     }
 
+    fun navigateGhost(input: Sequence<String>): Int {
+        val inputList = input.toList()
+        val instructions = parseInstructions(inputList.first())
+        val network = parseNetwork(inputList)
+
+        var result = 0
+        var currentNodes = findStartingNodesForGhost(network)
+
+        // That's actually very risky and could produce an infinite loop
+        run breaking@{
+            instructions.forEach { ins ->
+                result += 1
+                var zCount = 0
+                val newNodes = currentNodes.map { n ->
+                    val newNode =
+                        when (ins) {
+                            'L' -> n.left
+                            'R' -> n.right
+                            else -> "ZZZ"
+                        }
+                    zCount += 1
+                    network[newNode]!!
+                }
+
+                currentNodes = newNodes
+                if (zCount == currentNodes.size) {
+                    return@breaking
+                }
+            }
+        }
+
+        return result
+    }
+
+    private fun parseInstructions(input: String): Sequence<Char> {
+        val instruction = input.toCharArray().toList()
+        //.take() as many as you want, this is an infinitely looping sequence
+        return generateSequence { instruction }.flatten()
+    }
+
+    private fun parseNetwork(input: List<String>): Map<String, Node> {
+        val network = mutableMapOf<String, Node>()
+        input.drop(2)
+            .forEach {
+                val node = parseNode(it)
+                network[node.first] = node.second
+            }
+        return network
+    }
+
     private fun parseNode(node: String): Pair<String, Node> {
         val key = parseKey(node)
         val rawNode = node.substringAfter('=')
@@ -70,6 +112,13 @@ class Day08 {
 
     private fun parseKey(node: String): String {
         return node.substringBefore('=').trim()
+    }
+
+    private fun findStartingNodesForGhost(network: Map<String, Node>): List<Node> {
+        return network.keys
+            .filter { it.endsWith('A') }
+            .map { network[it]!! }
+            .toList()
     }
 
     data class Node(val left: String, val right: String)
