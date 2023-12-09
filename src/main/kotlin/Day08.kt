@@ -22,64 +22,24 @@ fun main(args: Array<String>) {
 class Day08 {
     fun navigate(input: Sequence<String>): Int {
         val inputList = input.toList()
-        val instructions = parseInstructions(inputList.first())
+        val instructions = parseInstructions(inputList.first()).toList()
         val network = parseNetwork(inputList)
+        val currentNode = network["AAA"]!!
 
-        var result = 0
-        var currentNode = network["AAA"]
-
-        // That's actually very risky and could produce an infinite loop
-        run breaking@{
-            instructions.forEach {
-                result += 1
-                val newNode =
-                    when (it) {
-                        'L' -> currentNode!!.left
-                        'R' -> currentNode!!.right
-                        else -> "ZZZ"
-                    }
-
-                currentNode = network[newNode]
-                if (newNode == "ZZZ") {
-                    return@breaking
-                }
-            }
-        }
-
-        return result
+        return findPathLength(currentNode, "ZZZ", instructions, network)
     }
 
     fun navigateGhost(input: Sequence<String>): Int {
         val inputList = input.toList()
-        val instructions = parseInstructions(inputList.first())
+        val instructions = parseInstructions(inputList.first()).toList()
         val network = parseNetwork(inputList)
+        val currentNodes = findStartingNodesForGhost(network)
 
-        var result = 0
-        var currentNodes = findStartingNodesForGhost(network)
+        val results = currentNodes.map { findPathLength(it, "Z", instructions, network) }.toList()
 
-        // That's actually very risky and could produce an infinite loop
-        run breaking@{
-            instructions.forEach { ins ->
-                result += 1
-                val newNodes = currentNodes.map { n ->
-                    val newNode =
-                        when (ins) {
-                            'L' -> n.left
-                            'R' -> n.right
-                            else -> "ZZZ"
-                        }
-                    network[newNode]!!
-                }
-
-                currentNodes = newNodes
-                val zNodeCount = currentNodes.count { it.name.endsWith('Z') }
-                if (zNodeCount >= currentNodes.size) {
-                    return@breaking
-                }
-            }
-        }
-
-        return result
+        println("Results $results")
+        println("lcm ${lcm(results)}")
+        return lcm(results)
     }
 
     private fun parseInstructions(input: String): Sequence<Char> {
@@ -118,6 +78,55 @@ class Day08 {
             .filter { it.endsWith('A') }
             .map { network[it]!! }
             .toList()
+    }
+
+    // We assume the path will eventually come to an end
+    private fun findPathLength(
+        startNode: Node,
+        endCondition: String,
+        instructions: List<Char>,
+        network: Map<String, Node>
+    ): Int {
+        var result = 0
+        var currentNode = startNode
+        run breaking@{
+            instructions.forEach {
+                result += 1
+                val newNode =
+                    when (it) {
+                        'L' -> currentNode.left
+                        'R' -> currentNode.right
+                        else -> endCondition
+                    }
+
+                currentNode = network[newNode]!!
+                if (newNode == endCondition) {
+                    return@breaking
+                }
+            }
+        }
+        return result
+    }
+
+    private fun lcm(numbers: List<Int>): Int {
+        var result = numbers[0]
+        for (i in 1 until numbers.size) {
+            result = lcm(result, numbers[i])
+        }
+        return result
+    }
+
+    private fun lcm(a: Int, b: Int): Int {
+        val larger = if (a > b) a else b
+        val maxLcm = a * b
+        var lcm = larger
+        while (lcm <= maxLcm) {
+            if (lcm % a == 0 && lcm % b == 0) {
+                return lcm
+            }
+            lcm += larger
+        }
+        return maxLcm
     }
 
     data class Node(val name: String, val left: String, val right: String)
