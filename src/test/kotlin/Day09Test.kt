@@ -6,17 +6,16 @@ class Day09Test {
     private val day09 = Day09()
 
     @Test
-    fun `Parsing the example document 1 for part 1 should return 2`() {
+    fun `Parsing the example document 1 for part 1 should return 114`() {
         val report = readLines("day09/report_history_example.txt")
 
         val actual = day09.predict(report)
-        Assertions.assertEquals(2, actual)
+        Assertions.assertEquals(114, actual)
     }
 
     @Test
-    @Disabled
     fun `Parsing the document for part 1 should return -1`() {
-        val report = readLines("day09/report_history_example.txt")
+        val report = readLines("day09/report_history.txt")
 
         val actual = day09.predict(report)
         Assertions.assertEquals(-1, actual)

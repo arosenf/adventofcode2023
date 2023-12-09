@@ -21,6 +21,22 @@ fun main(args: Array<String>) {
 
 class Day09 {
     fun predict(lines: Sequence<String>): Int {
-        return -1
+        val sequences = mutableListOf<List<List<Int>>>()
+
+        // Reduce to all 0
+        lines.forEach { l ->
+            val sequence = mutableListOf<List<Int>>()
+            var current = l.split(' ').map { s -> s.toInt() }
+
+            sequence.add(current)
+            while (current.sum() > 0) {
+                current = current.zipWithNext { x: Int, y: Int -> y - x }
+                sequence.add(current)
+            }
+            sequences.add(sequence)
+        }
+
+        // Extrapolate next value
+        return sequences.sumOf { s -> s.sumOf { it.last() } }
     }
 }
