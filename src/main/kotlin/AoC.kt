@@ -8,3 +8,5 @@ fun readLines(fileName: String): Sequence<String> {
     }
     return resource.lineSequence()
 }
+
+const val NOT_POSSIBLE = "Can't be!"

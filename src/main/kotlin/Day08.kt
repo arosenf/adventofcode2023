@@ -24,7 +24,7 @@ class Day08 {
         val inputList = input.toList()
         val instructions = parseInstructions(inputList.first())
         val network = parseNetwork(inputList)
-        val startNode = network["AAA"]!!
+        val startNode = network["AAA"] ?: error(NOT_POSSIBLE)
 
         return findPathLength(startNode, "ZZZ", instructions, network)
     }
@@ -80,7 +80,7 @@ class Day08 {
     private fun findStartingNodesForGhost(network: Map<String, Node>): List<Node> {
         return network.keys
             .filter { it.endsWith('A') }
-            .map { network[it]!! }
+            .map { network[it] ?: error(NOT_POSSIBLE) }
             .toList()
     }
 
@@ -103,7 +103,7 @@ class Day08 {
                         else -> endCondition
                     }
 
-                currentNode = network[newNode]!!
+                currentNode = network[newNode] ?: error(NOT_POSSIBLE)
                 if (newNode.endsWith(endCondition)) {
                     return@breaking
                 }
