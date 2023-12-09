@@ -1,5 +1,4 @@
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class Day09Test {
@@ -14,11 +13,11 @@ class Day09Test {
     }
 
     @Test
-    fun `Parsing the document for part 1 should return -1`() {
+    fun `Parsing the document for part 1 should return 1939607039`() {
         val report = readLines("day09/report_history.txt")
 
         val actual = day09.predict(report)
-        Assertions.assertEquals(-1, actual)
+        Assertions.assertEquals(1939607039L, actual)
     }
 /*
     @Test

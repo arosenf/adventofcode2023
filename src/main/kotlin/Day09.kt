@@ -20,17 +20,17 @@ fun main(args: Array<String>) {
 }
 
 class Day09 {
-    fun predict(lines: Sequence<String>): Int {
-        val sequences = mutableListOf<List<List<Int>>>()
+    fun predict(lines: Sequence<String>): Long {
+        val sequences = mutableListOf<List<List<Long>>>()
 
         // Reduce to all 0
         lines.forEach { l ->
-            val sequence = mutableListOf<List<Int>>()
-            var current = l.split(' ').map { s -> s.toInt() }
+            val sequence = mutableListOf<List<Long>>()
+            var current = l.split(' ').map { s -> s.toLong() }
 
             sequence.add(current)
-            while (current.sum() > 0) {
-                current = current.zipWithNext { x: Int, y: Int -> y - x }
+            while (current.any { it != 0L }) {
+                current = current.zipWithNext { x: Long, y: Long -> y - x }
                 sequence.add(current)
             }
             sequences.add(sequence)
