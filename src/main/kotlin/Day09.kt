@@ -30,20 +30,19 @@ class Day09 {
     fun predictBackwards(lines: Sequence<String>): Long {
         val sequences = reduceErrors(lines)
 
-        val debug = sequences.map { sequence ->
-            sequence.map { line -> line.first() }
-                .reversed()
-                .zipWithNext { x, y -> y - x }
-        }
-        println("$debug")
-
-
-        // Extrapolate previous value
         return sequences.sumOf { sequence ->
-            sequence.map { line -> line.first() }
+            val pairs = sequence.map { line -> Pair(0L, line.first()) }
                 .reversed()
-                .zipWithNext { x, y -> println("$y - $x = ${y-x}"); y - x }
-                .last()
+                .toMutableList()
+
+            // Cannot modify list in-place with zipWithNext
+            for (i in 0..<pairs.size - 1) {
+                val current = pairs[i]
+                val next = pairs[i + 1]
+                pairs[i + 1] = Pair(next.second - current.first, next.second)
+            }
+
+            pairs.last().first
         }
     }
 }

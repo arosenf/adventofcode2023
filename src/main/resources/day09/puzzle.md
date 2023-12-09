@@ -88,3 +88,9 @@ Adding the new values on the left side of each sequence from bottom to top event
 Doing this for the remaining example data above results in previous values of -3 for the first history and 0 for the second history. Adding all three new values together produces 2.
 
 Analyze your OASIS report again, this time extrapolating the previous value for each history. What is the sum of these extrapolated values?
+
+Your puzzle answer was 1041.
+
+Both parts of this puzzle are complete! They provide two gold stars: **
+
+At this point, you should return to your Advent calendar and try another puzzle.

@@ -1,5 +1,4 @@
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class Day09Test {
@@ -30,11 +29,10 @@ class Day09Test {
     }
 
     @Test
-    @Disabled
-    fun `Parsing the document for part 2 should return -1`() {
+    fun `Parsing the document for part 2 should return 1041`() {
         val network = readLines("day09/report_history.txt")
 
         val actual = day09.predictBackwards(network)
-        Assertions.assertEquals(-1, actual)
+        Assertions.assertEquals(1041, actual)
     }
 }
