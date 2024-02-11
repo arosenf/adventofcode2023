@@ -85,7 +85,7 @@ class Day05 {
         return Almanac(
             almanac.seeds
                 .chunked(2)
-                .map { it ->
+                .map {
                     generateSequence(it.first()) { it + 1 }
                         .take(it.last().toInt())
                 }
