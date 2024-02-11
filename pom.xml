@@ -63,17 +63,29 @@
             <plugin>
                 <groupId>org.openrewrite.maven</groupId>
                 <artifactId>rewrite-maven-plugin</artifactId>
-                <version>5.21.0</version>
+                <version>5.22.0</version>
                 <configuration>
                     <activeRecipes>
-                        <recipe>org.openrewrite.kotlin.StaticAnalysis</recipe>
+                        <recipe>org.openrewrite.github.SetupJavaUpgradeJavaVersion</recipe>
+                        <recipe>org.openrewrite.kotlin.cleanup.RemoveTrailingSemicolon</recipe>
+                        <recipe>org.openrewrite.kotlin.cleanup.RemoveTrailingComma</recipe>
+                        <recipe>org.openrewrite.kotlin.cleanup.EqualsMethodUsage</recipe>
+                        <recipe>org.openrewrite.kotlin.cleanup.ImplicitParameterInLambda</recipe>
+                        <recipe>org.openrewrite.kotlin.cleanup.UnnecessaryTypeParentheses</recipe>
+                        <recipe>org.openrewrite.maven.BestPractices</recipe>
+                        <recipe>org.openrewrite.xml.format.TabsAndIndents</recipe>
                     </activeRecipes>
                 </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.openrewrite.recipe</groupId>
-                        <artifactId>rewrite-static-analysis</artifactId>
-                        <version>1.2.2</version>
+                        <artifactId>rewrite-github-actions</artifactId>
+                        <version>2.1.4</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.openrewrite</groupId>
+                        <artifactId>rewrite-kotlin</artifactId>
+                        <version>1.11.3</version>
                     </dependency>
                 </dependencies>
             </plugin>
