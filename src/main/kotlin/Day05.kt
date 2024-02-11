@@ -50,21 +50,29 @@ class Day05 {
 
         var currentRanges: List<Range> = arrayListOf()
         for (line in lines) {
-            if (line.isEmpty()) {
-                continue
-            } else if (line.startsWith("seeds: ")) {
-                seeds = line.substringAfter(':')
-                    .trim()
-                    .splitToSequence(' ')
-                    .map(String::toLong)
-            } else if (line.endsWith("map:")) {
-                almanacMaps.addLast(AlmanacMap(currentRanges.asSequence()))
-                currentRanges = arrayListOf()
-            } else {
-                val parsedRange = line.splitToSequence(' ')
-                    .map(String::toLong)
-                    .toList()
-                currentRanges.addLast(Range(parsedRange[0], parsedRange[1], parsedRange[2]))
+            when {
+                line.isEmpty() -> {
+                    continue
+                }
+
+                line.startsWith("seeds: ") -> {
+                    seeds = line.substringAfter(':')
+                        .trim()
+                        .splitToSequence(' ')
+                        .map(String::toLong)
+                }
+
+                line.endsWith("map:") -> {
+                    almanacMaps.addLast(AlmanacMap(currentRanges.asSequence()))
+                    currentRanges = arrayListOf()
+                }
+
+                else -> {
+                    val parsedRange = line.splitToSequence(' ')
+                        .map(String::toLong)
+                        .toList()
+                    currentRanges.addLast(Range(parsedRange[0], parsedRange[1], parsedRange[2]))
+                }
             }
         }
         almanacMaps.addLast(AlmanacMap(currentRanges.asSequence()))
