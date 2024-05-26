@@ -46,9 +46,9 @@ class Day05 {
     // We read everything and keep it in memory. No need to do stream processing, we got RAM! 💾
     private fun readAlmanac(lines: Sequence<String>): Almanac {
         var seeds: Sequence<Long> = emptySequence()
-        val almanacMaps: List<AlmanacMap> = arrayListOf()
+        val almanacMaps: ArrayList<AlmanacMap> = arrayListOf()
 
-        var currentRanges: List<Range> = arrayListOf()
+        var currentRanges: ArrayList<Range> = arrayListOf()
         for (line in lines) {
             when {
                 line.isEmpty() -> {

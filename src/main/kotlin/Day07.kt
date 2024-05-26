@@ -21,8 +21,8 @@ fun main(args: Array<String>) {
 }
 
 fun readHands(lines: Sequence<String>, handEvaluator: (Hand) -> Hand): Hands {
-    val hands: List<List<Char>> = arrayListOf()
-    val bids: List<Int> = arrayListOf()
+    val hands: ArrayList<List<Char>> = arrayListOf()
+    val bids: ArrayList<Int> = arrayListOf()
 
     lines.forEach {
         val line = it.split(' ')
