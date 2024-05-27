@@ -118,7 +118,7 @@
                     <dependency>
                         <groupId>org.openrewrite</groupId>
                         <artifactId>rewrite-kotlin</artifactId>
-                        <version>1.16.0</version>
+                        <version>1.16.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
