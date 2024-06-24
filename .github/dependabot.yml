@@ -10,6 +10,12 @@ updates:
     schedule:
       interval: "weekly"
     ignore:
-      - match:
-          dependency-name: "*"
-          update-types: ["version-update:semver-minor", "version-update:semver-patch"]
+      - dependency-name: "*"
+        update-types: ["version-update:semver-minor", "version-update:semver-patch"]
+    groups:
+      maven:
+        applies-to: version-updates
+        patterns:
+        - "org.openrewrite*"
+        update-types:
+        - "major"
